@@ -8,8 +8,8 @@ from discord.ext import tasks
 
 # --- 設定 ---
 DISCORD_TOKEN = os.environ["DISCORD_TOKEN"]
-CHANNEL_ID = 123456789012345678  # 投稿したいチャンネルIDに変更
-CSV_URL = "ここに先ほどコピーしたURLを貼る"
+CHANNEL_ID = int(os.environ["CHANNEL_ID"])  # ← この行に変更
+CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT3eRvVcQUfCRU42X_jiZa2-l84LvrA2zLn_dblRsgQ5w-9OLxw2PQ_kOSWAsMmi1fJ9-RIS84W5t_T/pub?gid=0&single=true&output=csv"
 
 # --- CSVを取得して未紹介のものを返す ---
 def get_pending():
@@ -23,7 +23,8 @@ def get_pending():
 intents = discord.Intents.default()
 client = discord.Client(intents=intents)
 
-@tasks.loop(hours=168)
+@tasks.loop(minutes=1
+        )
 async def weekly_post():
     channel = client.get_channel(CHANNEL_ID)
     pending = get_pending()
