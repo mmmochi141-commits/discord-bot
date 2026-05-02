@@ -23,7 +23,7 @@ def get_pending():
 intents = discord.Intents.default()
 client = discord.Client(intents=intents)
 
-@tasks.loop(minutes=30)
+@tasks.loop(hours=168)
 async def weekly_post():
     channel = client.get_channel(CHANNEL_ID)
     pending = get_pending()
