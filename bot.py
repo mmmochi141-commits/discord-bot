@@ -22,15 +22,12 @@ client = discord.Client(intents=intents)
 
 async def weekly_post():
     channel = client.get_channel(CHANNEL_ID)
-    print(f"チャンネル: {channel}")
     programs = get_programs()
-    print(f"番組数: {len(programs)}")
-    if programs:
-        print(f"先頭の番組: {programs[0]}")
     if not programs:
         await channel.send("番組リストが空です！")
         return
     pick = random.choice(programs)
+    print(f"投稿した番組: {pick['タイトル']} / {pick['URL']}")
     await channel.send(
         f"📺 **今週のおすすめ番組！**\n\n"
         f"🎬 **{pick['タイトル']}**\n"
@@ -43,10 +40,8 @@ async def on_ready():
     scheduler = AsyncIOScheduler(timezone="Asia/Tokyo")
     scheduler.add_job(
         weekly_post,
-        CronTrigger(day_of_week="mon", hour=9, minute=0)
+        CronTrigger(day_of_week="mon", hour=0, minute=31)
     )
     scheduler.start()
-
-client.run(DISCORD_TOKEN)
 
 client.run(DISCORD_TOKEN)
