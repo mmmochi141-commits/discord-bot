@@ -43,7 +43,7 @@ async def on_ready():
     scheduler = AsyncIOScheduler(timezone="Asia/Tokyo")
     scheduler.add_job(
         weekly_post,
-        CronTrigger(day_of_week="mon", hour=0, minute=20)
+        CronTrigger(day_of_week="mon", hour=0, minute=24)
     )
     scheduler.start()
 
