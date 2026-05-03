@@ -4,7 +4,8 @@ import io
 import os
 import random
 import urllib.request
-from discord.ext import tasks
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.triggers.cron import CronTrigger
 
 # --- 設定 ---
 DISCORD_TOKEN = os.environ["DISCORD_TOKEN"]
@@ -23,7 +24,7 @@ def get_pending():
 intents = discord.Intents.default()
 client = discord.Client(intents=intents)
 
-@tasks.loop(hours=1)
+# --- 投稿処理 ---
 async def weekly_post():
     channel = client.get_channel(CHANNEL_ID)
     pending = get_pending()
@@ -40,7 +41,11 @@ async def weekly_post():
 @client.event
 async def on_ready():
     print(f"Bot起動: {client.user}")
-    if not weekly_post.is_running():
-        weekly_post.start()
+    scheduler = AsyncIOScheduler(timezone="Asia/Tokyo")
+    scheduler.add_job(
+        weekly_post,
+        CronTrigger(day_of_week="mon", hour=0, minute=0)  # 毎週月曜9時
+    )
+    scheduler.start()
 
 client.run(DISCORD_TOKEN)
