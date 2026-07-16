@@ -33,3 +33,14 @@ req = urllib.request.Request(
     method="POST",
 )
 urllib.request.urlopen(req)
+
+# デバッグ用：トークンが有効か確認
+test_req = urllib.request.Request(
+    "https://discord.com/api/v10/users/@me",
+    headers={"Authorization": f"Bot {DISCORD_TOKEN}"}
+)
+try:
+    with urllib.request.urlopen(test_req) as res:
+        print("トークンは有効:", res.read().decode())
+except urllib.error.HTTPError as e:
+    print("トークンエラー:", e.code, e.read().decode())
